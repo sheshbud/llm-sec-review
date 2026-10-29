@@ -12,12 +12,44 @@ Three numbers matter:
 """
 
 
+# Curated CWE equivalence classes.
+#
+# Scoring on exact CWE match understates both tools: a reviewer that names the parent
+# category, or a sibling that is arguably more precise for the specific sink, has still
+# found the bug. Each group below is justified individually rather than pulled wholesale
+# from the MITRE tree, so the relaxation stays auditable.
+CWE_EQUIV = [
+    # CWE-95 (Eval Injection) is a child of CWE-94 (Code Injection).
+    {"CWE-94", "CWE-95"},
+    # CWE-338 (Cryptographically Weak PRNG) is a child of CWE-330 (Insufficiently
+    # Random Values); for random.choice() in a reset token, the child is more precise.
+    {"CWE-330", "CWE-338"},
+    # MD5 on a password is reachable as either CWE-327 (broken algorithm) or CWE-916
+    # (password hash with insufficient computational effort). CWE-916 is the better
+    # fit for the password case.
+    {"CWE-327", "CWE-916"},
+]
+
+
+def _expand(cwes):
+    """Widen a CWE set to include everything in its equivalence classes."""
+    out = set(cwes)
+    for group in CWE_EQUIV:
+        if out & group:
+            out |= group
+    return out
+
+
 def _cwes(findings):
     return {f["cwe"] for f in findings}
 
 
-def score(results, labels):
-    """results: {filename: [findings]}.  labels: parsed labels.json."""
+def score(results, labels, equiv=False):
+    """results: {filename: [findings]}.  labels: parsed labels.json.
+
+    equiv=False scores on exact CWE match (conservative).
+    equiv=True  also accepts a CWE in the same curated equivalence class.
+    """
     vuln = adv = safe = 0
     vuln_hit = adv_hit = safe_fp = 0
     per_sample = {}
@@ -25,7 +57,8 @@ def score(results, labels):
     for fn, lab in sorted(labels.items()):
         found = results.get(fn, [])
         want = {e["cwe"] for e in lab["expected"]}
-        hit = bool(want & _cwes(found))
+        got = _cwes(found)
+        hit = bool((_expand(want) & _expand(got)) if equiv else (want & got))
 
         if lab["safe"]:
             safe += 1

@@ -63,13 +63,30 @@ def cmd_llm(args):
 
 def cmd_evaluate(args):
     labels = _labels()
+    summary = []
     for fname, title in (("semgrep.json", "SEMGREP BASELINE"),
                          ("llm.json", "LLM REVIEWER (Claude, schema-validated)")):
         p = RESULTS / fname
         if not p.exists():
             print("missing %s - run the matching command first" % p, file=sys.stderr)
             continue
-        print(evaluate.render(title, evaluate.score(json.loads(p.read_text()), labels)))
+        res = json.loads(p.read_text())
+        strict = evaluate.score(res, labels)
+        loose = evaluate.score(res, labels, equiv=True)
+        print(evaluate.render(title + "  [exact CWE match]", strict))
+        summary.append((title, strict, loose))
+
+    if summary:
+        print("\n" + "=" * 62)
+        print("DETECTION: exact CWE match vs. CWE-equivalence")
+        print("=" * 62)
+        for title, strict, loose in summary:
+            print("  %-42s %2d/%2d strict   %2d/%2d equiv"
+                  % (title, strict["detection"]["caught"], strict["detection"]["total"],
+                     loose["detection"]["caught"], loose["detection"]["total"]))
+        print("\n  Equivalence classes applied:")
+        for g in evaluate.CWE_EQUIV:
+            print("    %s" % " == ".join(sorted(g)))
     return 0
 
 
