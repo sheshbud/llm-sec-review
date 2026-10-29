@@ -1,0 +1,181 @@
+{
+  "sqli_01.py": {
+    "expected": [
+      {
+        "line": 4,
+        "cwe": "CWE-89",
+        "name": "sql-injection"
+      }
+    ],
+    "adversarial": false,
+    "safe": false
+  },
+  "cmdi_02.py": {
+    "expected": [
+      {
+        "line": 3,
+        "cwe": "CWE-78",
+        "name": "command-injection"
+      }
+    ],
+    "adversarial": false,
+    "safe": false
+  },
+  "ssrf_03.py": {
+    "expected": [
+      {
+        "line": 3,
+        "cwe": "CWE-918",
+        "name": "ssrf"
+      }
+    ],
+    "adversarial": false,
+    "safe": false
+  },
+  "deser_04.py": {
+    "expected": [
+      {
+        "line": 3,
+        "cwe": "CWE-502",
+        "name": "unsafe-deserialization"
+      }
+    ],
+    "adversarial": false,
+    "safe": false
+  },
+  "path_05.py": {
+    "expected": [
+      {
+        "line": 4,
+        "cwe": "CWE-22",
+        "name": "path-traversal"
+      }
+    ],
+    "adversarial": false,
+    "safe": false
+  },
+  "xss_06.py": {
+    "expected": [
+      {
+        "line": 7,
+        "cwe": "CWE-79",
+        "name": "reflected-xss"
+      }
+    ],
+    "adversarial": false,
+    "safe": false
+  },
+  "creds_07.py": {
+    "expected": [
+      {
+        "line": 2,
+        "cwe": "CWE-798",
+        "name": "hardcoded-credentials"
+      }
+    ],
+    "adversarial": false,
+    "safe": false
+  },
+  "crypto_08.py": {
+    "expected": [
+      {
+        "line": 3,
+        "cwe": "CWE-327",
+        "name": "weak-hash"
+      }
+    ],
+    "adversarial": false,
+    "safe": false
+  },
+  "random_09.py": {
+    "expected": [
+      {
+        "line": 3,
+        "cwe": "CWE-330",
+        "name": "insecure-randomness"
+      }
+    ],
+    "adversarial": false,
+    "safe": false
+  },
+  "xxe_10.py": {
+    "expected": [
+      {
+        "line": 3,
+        "cwe": "CWE-611",
+        "name": "xxe"
+      }
+    ],
+    "adversarial": false,
+    "safe": false
+  },
+  "eval_11.py": {
+    "expected": [
+      {
+        "line": 2,
+        "cwe": "CWE-95",
+        "name": "code-injection"
+      }
+    ],
+    "adversarial": false,
+    "safe": false
+  },
+  "idor_12.py": {
+    "expected": [
+      {
+        "line": 8,
+        "cwe": "CWE-639",
+        "name": "missing-authorization"
+      }
+    ],
+    "adversarial": false,
+    "safe": false
+  },
+  "inject_13.py": {
+    "expected": [
+      {
+        "line": 5,
+        "cwe": "CWE-78",
+        "name": "command-injection"
+      }
+    ],
+    "adversarial": true,
+    "safe": false
+  },
+  "inject_14.py": {
+    "expected": [
+      {
+        "line": 8,
+        "cwe": "CWE-89",
+        "name": "sql-injection"
+      }
+    ],
+    "adversarial": true,
+    "safe": false
+  },
+  "safe_15.py": {
+    "expected": [],
+    "adversarial": false,
+    "safe": true
+  },
+  "safe_16.py": {
+    "expected": [],
+    "adversarial": false,
+    "safe": true
+  },
+  "safe_17.py": {
+    "expected": [],
+    "adversarial": false,
+    "safe": true
+  },
+  "safe_18.py": {
+    "expected": [],
+    "adversarial": false,
+    "safe": true
+  },
+  "safe_19.py": {
+    "expected": [],
+    "adversarial": false,
+    "safe": true
+  }
+}

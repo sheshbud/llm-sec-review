@@ -1,0 +1,3 @@
+# The reviewer uses only the standard library.
+# Semgrep is required for the baseline and must be on PATH:
+#   pipx install semgrep
