@@ -1,0 +1,2 @@
+# Only the agentic RAG path needs this. The original reviewer stays dependency-free.
+chromadb>=0.5

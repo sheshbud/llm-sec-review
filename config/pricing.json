@@ -1,0 +1,7 @@
+{
+  "_note": "USD per million tokens. Fill from the official Anthropic pricing page before reporting cost. null = cost reported as unknown.",
+  "models": {
+    "claude-haiku-5-5": {"input_per_mtok": null, "output_per_mtok": null},
+    "claude-sonnet-5-5": {"input_per_mtok": null, "output_per_mtok": null}
+  }
+}
