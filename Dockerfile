@@ -1,4 +1,6 @@
 FROM python:3.12-slim
+# Patch base-image CVEs (zlib1g CVE-2026-85091, CVE-2026-76844 are fixed in deb13u1)
+RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY requirements-rag.txt .
 RUN pip install --no-cache-dir -r requirements-rag.txt

@@ -1,0 +1,15 @@
+# gitleaks config for llm-sec-review
+#
+# benchmark/ is a LABELED CORPUS of deliberately vulnerable Python samples, including
+# creds_07.py (CWE-798, hardcoded credentials). Those strings are test fixtures, not
+# leaked secrets. Scanning them would fail the build by design, so the path is allowlisted.
+# Everything outside benchmark/ is scanned normally.
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Labeled vulnerable corpus used to benchmark the reviewer"
+paths = [
+  '''benchmark/''',
+]
