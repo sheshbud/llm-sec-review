@@ -76,7 +76,7 @@ class HashEmbedder:
         for t in texts:
             v = [0.0] * self.dim
             for tok in re.findall(r"[a-z0-9_]+", t.lower()):
-                h = int(hashlib.md5(tok.encode()).hexdigest(), 16)  # non-security use: bucketing only
+                h = int(hashlib.md5(tok.encode(), usedforsecurity=False).hexdigest(), 16)  # non-security use: bucketing only
                 v[h % self.dim] += 1.0
             vecs.append(_l2(v))
         return vecs
