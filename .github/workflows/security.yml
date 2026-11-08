@@ -1,0 +1,60 @@
+name: security
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  secrets:
+    name: gitleaks (secrets)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_CONFIG: .gitleaks.toml
+
+  dependencies:
+    name: pip-audit (dependencies)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pip-audit
+      - run: pip-audit -r requirements.txt --strict
+      - run: pip-audit -r requirements-rag.txt --strict
+
+  sast:
+    name: semgrep (SAST)
+    runs-on: ubuntu-latest
+    container: semgrep/semgrep
+    steps:
+      - uses: actions/checkout@v4
+      # benchmark/ is the labeled vulnerable corpus. Scanning it would fail by design.
+      - run: semgrep scan --config p/python --config p/secrets --error --exclude benchmark llmsec tests
+
+  image:
+    name: trivy + syft (image CVEs, SBOM)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t llm-sec-review:ci .
+      - name: Trivy image scan
+        run: |
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+            aquasec/trivy image --exit-code 1 --severity HIGH,CRITICAL \
+            --ignore-unfixed llm-sec-review:ci
+      - uses: anchore/sbom-action@v0
+        with:
+          image: llm-sec-review:ci
+          format: spdx-json
+          artifact-name: sbom.spdx.json
